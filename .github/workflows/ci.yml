@@ -118,7 +118,6 @@ jobs:
         with:
           node-version: "14.x"
           registry-url: "https://npm.pkg.github.com"
-          scope: "@incognitus"
       - name: Deploy to github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -184,7 +183,6 @@ jobs:
         with:
           node-version: "14.x"
           registry-url: "https://npm.pkg.github.com"
-          scope: "@incognitus"
       - name: Deploy to github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
