@@ -1,0 +1,52 @@
+root: true
+parser: "@typescript-eslint/parser"
+plugins:
+  - "@typescript-eslint"
+extends:
+  - "eslint:recommended"
+  - "plugin:@typescript-eslint/recommended"
+  - "prettier"
+  - "prettier/@typescript-eslint"
+env:
+  node: true
+rules:
+  no-console: error
+  no-debugger: error
+  comma-dangle:
+    - warn
+    - arrays: "always-multiline"
+      exports: "always-multiline"
+      functions: "always-multiline"
+      imports: "always-multiline"
+      objects: "always-multiline"
+  comma-spacing:
+    - error
+    - before: false
+      after: true
+  quotes:
+    - error
+    - single
+  no-unused-vars: 0
+  "@typescript-eslint/no-unused-vars": error
+  "@typescript-eslint/quotes":
+    - warn
+    - single
+  "@typescript-eslint/member-delimiter-style":
+    - warn
+    - multiline:
+        delimiter: semi
+        requireLast: true
+      singleline:
+        delimiter: semi
+        requireLast: false
+overrides:
+  - files:
+      - "**/__tests__/*.(spec|test).{j,t}s"
+    env:
+      jest: true
+    rules:
+      "@typescript-eslint/no-unused-vars": warn
+  - files:
+      - "**/*.d.ts"
+    rules:
+      "@typescript-eslint/no-unused-vars": off

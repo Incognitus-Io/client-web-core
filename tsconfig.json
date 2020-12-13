@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": ["node", "jest"],
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "outDir": "dist",
+    "declarationDir": "types"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "src/**/__tests__/*"]
+}
