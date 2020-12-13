@@ -93,12 +93,26 @@ jobs:
       - name: Build library
         run: yarn build
 
-      - name: Prep package.json for release
+      - name: Generate version
+        id: pkg-info
         run: |
-          # build="$(git rev-list --count $(git rev-list --tags --max-count=1)..HEAD)"
-          # version="$(yarn json -f package.json version)-prerelease+build${build}"
+          git clone --bare ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY} ../metadata
+          pushd ../metadata
 
-          # yarn json -I -f package.json -e "this.version='${version}'"
+          latestTag=$(git rev-list --tags --max-count=1)
+          firstCommit=$(git rev-list --max-parents=0 HEAD)
+          build="$(git rev-list --count ${latestTag:=${firstCommit}}..HEAD)"
+
+          popd
+          version="$(yarn -s json -f package.json version)-pre.${build}"
+
+          echo ::set-output name=version::${version}
+
+      - name: Prep package.json for release
+        env:
+          PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
+        run: |
+          yarn json -I -f package.json -e "this.version='${PKG_VERSION}'"
           yarn json -I -f package.json -e "this.scripts=undefined"
           yarn json -I -f package.json -e "this.devDependencies=undefined"
 
@@ -111,7 +125,8 @@ jobs:
       - name: Deploy to npmjs.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn publish --access public --tag next --prerelease --preid pre --no-git-tag-version
+          PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
+        run: yarn publish --access public --tag next --no-git-tag-version --new-version $PKG_VERSION
 
       - name: Setup github.com
         uses: actions/setup-node@v1
@@ -121,7 +136,8 @@ jobs:
       - name: Deploy to github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn publish --access public --tag next --prerelease --preid pre --no-git-tag-version
+          PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
+        run: yarn publish --access public --tag next --no-git-tag-version --new-version $PKG_VERSION
 
   deploy-latest:
     runs-on: ubuntu-18.04
