@@ -1,5 +1,6 @@
 import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
+import eslint from '@rollup/plugin-eslint';
 
 const esmOutput = {
   file: 'lib/esm/index.js',
@@ -26,6 +27,10 @@ export default {
     typescript({
       useTsconfigDeclarationDir: true,
       tsconfig: 'tsconfig.json',
+    }),
+    eslint({
+      throwOnError: true,
+      throwOnWarning: true,
     }),
   ],
   external: [],

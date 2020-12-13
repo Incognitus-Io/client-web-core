@@ -26,11 +26,8 @@ rules:
   quotes:
     - error
     - single
-  no-unused-vars: 0
-  "@typescript-eslint/no-unused-vars": error
-  "@typescript-eslint/quotes":
-    - warn
-    - single
+  no-unused-vars: error
+  "@typescript-eslint/no-unused-vars": off
   "@typescript-eslint/member-delimiter-style":
     - warn
     - multiline:
@@ -46,7 +43,3 @@ overrides:
       jest: true
     rules:
       "@typescript-eslint/no-unused-vars": warn
-  - files:
-      - "**/*.d.ts"
-    rules:
-      "@typescript-eslint/no-unused-vars": off
