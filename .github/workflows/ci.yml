@@ -20,18 +20,14 @@ jobs:
     runs-on: ubuntu-18.04
     if: "! contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
 
-    strategy:
-      matrix:
-        node-version: [12, 14]
-
     env:
       NODE_ENV: test
 
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 14
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -54,7 +50,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         env:
-          NODE_VER: ${{ matrix.node-version }}
+          NODE_VER: 14
         with:
           env_vars: NODE_VER
           path_to_write_report: ./coverage/codecov_report.txt
@@ -71,7 +67,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
 
     env:
-      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
       NODE_ENV: production
 
     steps:
@@ -106,10 +101,28 @@ jobs:
           # yarn json -I -f package.json -e "this.version='${version}'"
           yarn json -I -f package.json -e "this.scripts=undefined"
           yarn json -I -f package.json -e "this.devDependencies=undefined"
+
+      - name: Setup npmjs.com
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+          registry-url: "https://registry.npmjs.org"
+          scope: "@incognitus"
       - name: Deploy to npmjs.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn publish --access public --tag next --prerelease --preid build --no-git-tag-version
+        run: yarn publish --access public --tag next --prerelease --preid pre --no-git-tag-version
+
+      - name: Setup github.com
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@incognitus"
+      - name: Deploy to github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn publish --access public --tag next --prerelease --preid pre --no-git-tag-version
 
   deploy-latest:
     runs-on: ubuntu-18.04
@@ -117,7 +130,6 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
 
     env:
-      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
       NODE_ENV: production
 
     steps:
@@ -155,8 +167,26 @@ jobs:
           yarn json -I -f package.json -e "this.version='${PKG_VERSION}'"
           yarn json -I -f package.json -e "this.scripts=undefined"
           yarn json -I -f package.json -e "this.devDependencies=undefined"
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+          registry-url: "https://registry.npmjs.org"
+          scope: "@incognitus"
       - name: Deploy to npmjs.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
+        run: yarn publish --access public --no-git-tag-version --new-version $PKG_VERSION
+
+      - name: Setup github.com
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@incognitus"
+      - name: Deploy to github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
         run: yarn publish --access public --no-git-tag-version --new-version $PKG_VERSION
