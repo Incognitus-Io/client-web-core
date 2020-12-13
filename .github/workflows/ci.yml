@@ -119,23 +119,11 @@ jobs:
       - name: Setup npmjs.com
         uses: actions/setup-node@v1
         with:
-          node-version: "14.x"
           registry-url: "https://registry.npmjs.org"
           scope: "@incognitus"
       - name: Deploy to npmjs.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
-        run: yarn publish --access public --tag next --no-git-tag-version --new-version $PKG_VERSION
-
-      - name: Setup github.com
-        uses: actions/setup-node@v1
-        with:
-          node-version: "14.x"
-          registry-url: "https://npm.pkg.github.com"
-      - name: Deploy to github.com
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
         run: yarn publish --access public --tag next --no-git-tag-version --new-version $PKG_VERSION
 
@@ -185,22 +173,10 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "14.x"
           registry-url: "https://registry.npmjs.org"
           scope: "@incognitus"
       - name: Deploy to npmjs.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
-        run: yarn publish --access public --no-git-tag-version --new-version $PKG_VERSION
-
-      - name: Setup github.com
-        uses: actions/setup-node@v1
-        with:
-          node-version: "14.x"
-          registry-url: "https://npm.pkg.github.com"
-      - name: Deploy to github.com
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PKG_VERSION: ${{ steps.pkg-info.outputs.version }}
         run: yarn publish --access public --no-git-tag-version --new-version $PKG_VERSION
