@@ -10,7 +10,11 @@ extends:
 env:
   node: true
 rules:
-  no-console: error
+  no-console:
+    - error
+    - allow:
+        - warn
+        - error
   no-debugger: error
   comma-dangle:
     - warn
@@ -28,6 +32,7 @@ rules:
     - single
   no-unused-vars: error
   "@typescript-eslint/no-unused-vars": off
+  "@typescript-eslint/explicit-module-boundary-types": off
   "@typescript-eslint/member-delimiter-style":
     - warn
     - multiline:
@@ -43,3 +48,7 @@ overrides:
       jest: true
     rules:
       "@typescript-eslint/no-unused-vars": warn
+  - files:
+      - "*.js"
+    rules:
+      "@typescript-eslint/no-var-requires": off
