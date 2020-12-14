@@ -1,6 +1,12 @@
+/**
+ * The configuration options to initialize the Incognitus service.
+ */
 export interface IncognitusConfig {
+  /** The api to use to check features. */
   aipUrl?: string;
+  /** Your tenant ID, found in the managment console. */
   tenantId: string;
+  /** The application ID, found in the management console. */
   applicationId: string;
 }
 
@@ -80,7 +86,11 @@ export class IncognitusService {
    * @param name The name of the feature flag.
    */
   public async isEnabled(name: string) {
-    return this.featureCache.get(name) ?? (await this.getFeature(name));
+    let status = this.featureCache.get(name);
+    if (status === undefined) {
+      status = await this.getFeature(name);
+    }
+    return status;
   }
 
   /**
