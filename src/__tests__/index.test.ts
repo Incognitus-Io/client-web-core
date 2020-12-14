@@ -73,6 +73,18 @@ describe('Incognitus Service', () => {
     });
   });
 
+  describe('isReady', () => {
+    it('should be false before initializing', () => {
+      expect(IncognitusService.isReady).toBe(false);
+    });
+
+    it('should be true after intializing', async () => {
+      await IncognitusService.initialize(config);
+
+      expect(IncognitusService.isReady).toBe(true);
+    });
+  });
+
   describe('ctor', () => {
     it('should throw an error when the tenant is blank', () => {
       expect(

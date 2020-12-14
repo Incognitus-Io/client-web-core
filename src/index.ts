@@ -47,6 +47,13 @@ export class IncognitusService {
     }
     return IncognitusService._instance;
   }
+
+  /**
+   * @returns if the service is ready for use.
+   */
+  public static get isReady() {
+    return IncognitusService._instance !== undefined;
+  }
   private static _instance?: IncognitusService;
 
   /**
