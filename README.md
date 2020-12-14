@@ -15,14 +15,12 @@ Before you're able to use the service you'll need to initialize with your tenant
 Initialize Incognitus service
 
 ```typescript
-import { IncognitusService, IncognitusConfig } from '@incognitus/client-web-core';
+import { IncognitusService } from '@incognitus/client-web-core';
 
-const incognitusConfig = {
+const IncognitusService.initialize({
   tenantId: '{your tenant key}',
   applicationId: '{your app id}',
-} as IncognitusConfig;
-
-const IncognitusService.initialize(incognitusConfig);
+});
 ```
 
 | Key           | Description               |
