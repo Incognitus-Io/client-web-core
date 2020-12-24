@@ -110,6 +110,14 @@ export class IncognitusService {
   }
 
   /**
+   * Checks if a feature flag has been fetched and cached.
+   * @param name The name of the feature flag.
+   */
+  public hasCachedFeature(name: string) {
+    return this.featureCache.has(name);
+  }
+
+  /**
    * Fetches all feature flags for the configured service.
    */
   public async getAllFeatures() {

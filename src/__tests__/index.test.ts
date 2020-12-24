@@ -26,7 +26,7 @@ describe('Incognitus Service', () => {
     it('should throw error when getting instance before initializing', async () => {
       const spy = jest.spyOn(console, 'error').mockImplementation(() => {
         /* nop */
-    });
+      });
       expect(IncognitusService.instance).not.toBeDefined();
       expect(spy).toHaveBeenCalled();
     });
@@ -159,6 +159,18 @@ describe('Incognitus Service', () => {
       await svc.isDisabled('foo');
 
       expect(fetchMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('hasCachedFeature', () => {
+    let svc: IncognitusService;
+
+    beforeEach(() => {
+      svc = new IncognitusService(config);
+    });
+
+    it('returns false when flag has not been cached', () => {
+      expect(svc.hasCachedFeature('foobar')).toBe(false);
     });
   });
 
