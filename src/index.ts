@@ -43,7 +43,7 @@ export class IncognitusService {
    */
   public static get instance() {
     if (!IncognitusService._instance) {
-      throw new Error('Service not initialized');
+      console.error('Service not initialized');
     }
     return IncognitusService._instance;
   }

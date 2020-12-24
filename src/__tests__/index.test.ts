@@ -24,7 +24,11 @@ describe('Incognitus Service', () => {
 
   describe('instance', () => {
     it('should throw error when getting instance before initializing', async () => {
-      expect(() => IncognitusService.instance).toThrowError();
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => {
+        /* nop */
+    });
+      expect(IncognitusService.instance).not.toBeDefined();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('should return instance after initializing', async () => {
@@ -67,7 +71,8 @@ describe('Incognitus Service', () => {
 
       await IncognitusService.initialize(config);
 
-      const instance = IncognitusService.instance;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const instance = IncognitusService.instance!;
       await expect(instance.isEnabled('feat1')).resolves.toBe(true);
       await expect(instance.isEnabled('feat2')).resolves.toBe(true);
     });
