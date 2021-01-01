@@ -50,6 +50,12 @@ describe('Incognitus Service', () => {
       expect(instance1).not.toBe(instance2);
     });
 
+    it('should return the instance', async () => {
+      const instance = await IncognitusService.initialize(config);
+
+      expect(instance).toEqual(IncognitusService.instance);
+    });
+
     it('should fetch the initial set of features', async () => {
       fetchMock.mockResponse(async (req) => {
         if (req.url.endsWith('/feature')) {

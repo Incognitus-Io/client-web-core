@@ -60,11 +60,14 @@ export class IncognitusService {
    * Initalizes the Incognitus service and fetches all features.
    *
    * @param config the configuration options.
+   * @returns the instance of the service initialized.
    */
   public static initialize = async (config: IncognitusConfig) => {
     const service = new IncognitusService(config);
     await service.getAllFeatures();
     IncognitusService._instance = service;
+
+    return service;
   };
 
   private featureCache = Object.freeze(new Map<string, boolean>());
